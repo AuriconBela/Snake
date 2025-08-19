@@ -14,11 +14,6 @@ internal class Game
         FoodPosition = NextFood();
     }
 
-    private void Snake_OnEating(object? sender, EventArgs e)
-    {
-        FoodPosition = NextFood();
-    }
-
     public void PropagateKeyBoardEvent(Keys key)
     {
         if (!ValidKey(key))
@@ -37,6 +32,10 @@ internal class Game
 
     public StepResult NextFrame()
     {
+        if (UserWon())
+        {
+            return StepResult.Win;
+        }
         if (CanGoAhead() && WontBiteItself())
         {
             Snake.Move();
@@ -67,6 +66,16 @@ internal class Game
         Board[foodPosition.X, foodPosition.Y] = CellType.Food;
 
         return foodPosition;
+    }
+
+    private void Snake_OnEating(object? sender, EventArgs e)
+    {
+        FoodPosition = NextFood();
+    }
+
+    private bool UserWon()
+    {
+        return Snake.Length == Board.Height * Board.Width - 1;
     }
 
     private bool CanGoAhead()

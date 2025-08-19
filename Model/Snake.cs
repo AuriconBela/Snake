@@ -58,24 +58,14 @@ internal class Snake
 
     internal Position NewHeadPosition()
     {
-        Position nextStep;
-        switch (Direction)
+        Position nextStep = Direction switch
         {
-            case Direction.ToRight:
-                nextStep = new(Head.X + 1, Head.Y);
-                break;
-            case Direction.ToLeft:
-                nextStep = new(Head.X - 1, Head.Y);
-                break;
-            case Direction.ToTop:
-                nextStep = new(Head.X, Head.Y - 1);
-                break;
-            case Direction.ToBottom:
-                nextStep = new(Head.X, Head.Y + 1);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
+            Direction.ToRight => new(Head.X + 1, Head.Y),
+            Direction.ToLeft => new(Head.X - 1, Head.Y),
+            Direction.ToTop => new(Head.X, Head.Y - 1),
+            Direction.ToBottom => new(Head.X, Head.Y + 1),
+            _ => throw new NotImplementedException(),
+        };
         return nextStep;
     }
 
@@ -85,6 +75,4 @@ internal class Snake
         _body.Add(new(_head.X - 1, _head.Y));
         _body.Add(new(_head.X - 2, _head.Y));               
     }
-
-
 }
