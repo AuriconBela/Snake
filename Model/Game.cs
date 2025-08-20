@@ -3,13 +3,12 @@
 internal class Game
 {
     public Snake Snake { get; }
-    public Board Board { get; set; } = new();
 
     public Position? FoodPosition { get; private set; }
 
     public Game()
     {        
-        Snake = new(Direction.ToRight, (x) => IsFood(x));
+        Snake = new(Direction.ToRight, IsFood);
         Snake.OnEating += Snake_OnEating;
         FoodPosition = NextFood();
     }
@@ -59,12 +58,6 @@ internal class Game
         }
         while (Snake.Body.Contains(foodPosition)); // Make sure food doesn't appear on snake
 
-        if (FoodPosition is not null)
-        {
-            Board[FoodPosition.X, FoodPosition.Y] = CellType.Snake;
-        }
-        Board[foodPosition.X, foodPosition.Y] = CellType.Food;
-
         return foodPosition;
     }
 
@@ -75,17 +68,17 @@ internal class Game
 
     private bool UserWon()
     {
-        return Snake.Length == Board.Height * Board.Width - 1;
+        return Snake.Length == Constants.BoardWidth * Constants.BoardHeight - 1;
     }
 
     private bool CanGoAhead()
     {
         return Snake.Direction switch
         {
-            Direction.ToRight => Snake.Head.X < Board.Width-1,
+            Direction.ToRight => Snake.Head.X < Constants.BoardWidth - 1,
             Direction.ToLeft => Snake.Head.X > 0,
             Direction.ToTop => Snake.Head.Y > 0,
-            Direction.ToBottom => Snake.Head.Y < Board.Height-1,
+            Direction.ToBottom => Snake.Head.Y < Constants.BoardHeight - 1,
             _ => throw new NotImplementedException(),
         };
     }
@@ -109,6 +102,6 @@ internal class Game
 
     private bool IsFood(Position position)
     {
-        return Board[position.X, position.Y] == CellType.Food;
+        return position == FoodPosition;
     }
 }
